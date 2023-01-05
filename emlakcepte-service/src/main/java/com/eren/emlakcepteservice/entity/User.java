@@ -39,7 +39,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.type = type;
-        this.createDate = LocalDateTime.now();
     }
 
     public Integer getId() {
