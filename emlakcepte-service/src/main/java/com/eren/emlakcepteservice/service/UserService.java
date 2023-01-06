@@ -35,18 +35,29 @@ public class UserService {
         return userConverter.convert(userRepository.findAll());
     }
 
-public UserResponse getUserResponseById(Integer userId) {
-    Optional<User> foundUser = getById(userId);
-    return foundUser.map(user -> userConverter.convert(user))
-            .orElseThrow(() -> {
-                // log -> not found
-                return new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this id: " + userId);
-            });
-}
+    public UserResponse getUserResponseById(Integer userId) {
+        Optional<User> foundUser = getById(userId);
+        return foundUser.map(user -> userConverter.convert(user))
+                .orElseThrow(() -> {
+                    // log -> not found
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this id: " + userId);
+                });
+    }
 
-public Optional<User> getById(Integer userId) {
-    return userRepository.findById(userId);
-}
+    public Optional<User> getById(Integer userId) {
+        return userRepository.findById(userId);
+    }
+    public Optional<User> getByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
 
+    public UserResponse getUserResponseByEmail(String email) {
+        Optional<User> foundUser = getByEmail(email);
+        return foundUser.map(user -> userConverter.convert(user))
+                .orElseThrow(() -> {
+                    // log -> not found
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this email: " + email);
+                });
+    }
 }
