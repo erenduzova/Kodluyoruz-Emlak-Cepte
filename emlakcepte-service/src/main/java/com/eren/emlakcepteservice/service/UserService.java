@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -38,43 +37,32 @@ public class UserService {
 
     // Get UserResponse By Id
     public UserResponse getUserResponseById(Integer userId) {
-        Optional<User> foundUser = getById(userId);
-        return foundUser.map(user -> userConverter.convert(user))
-                .orElseThrow(() -> {
-                    // log -> not found
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this id: " + userId);
-                });
+        User foundUser = getById(userId);
+        return userConverter.convert(foundUser);
     }
 
     // Get User By Id
-    public Optional<User> getById(Integer userId) {
-        return userRepository.findById(userId);
+    public User getById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this id: " + userId));
     }
     // Get User By Email
-    public Optional<User> getByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this email: " + email));
     }
 
     // Get UserResponse By Email
     public UserResponse getUserResponseByEmail(String email) {
-        Optional<User> foundUser = getByEmail(email);
-        return foundUser.map(user -> userConverter.convert(user))
-                .orElseThrow(() -> {
-                    // log -> not found
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this email: " + email);
-                });
+        User foundUser = getByEmail(email);
+        return userConverter.convert(foundUser);
     }
 
     // Update and return updated UserResponse
     public UserResponse update(UserUpdateRequest userUpdateRequest, Integer userId) {
-        Optional<User> foundUser = getById(userId);
-        if (foundUser.isPresent()) {
-            User updatedUser = updateUser(foundUser.get(), userUpdateRequest);
-            return userConverter.convert(updatedUser);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with this id: " + userId);
-        }
-
+        User foundUser = getById(userId);
+        User updatedUser = updateUser(foundUser, userUpdateRequest);
+        return userConverter.convert(updatedUser);
     }
 
     // Update User
