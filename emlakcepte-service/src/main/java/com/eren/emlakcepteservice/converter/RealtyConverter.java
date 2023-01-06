@@ -34,7 +34,7 @@ public class RealtyConverter {
         realty.setProvince(realtyRequest.getProvince());
         realty.setStatus(RealtyStatus.IN_REVIEW);
         realty.setCreateDate(LocalDateTime.now());
-        // User ?
+        // User set in realtyService
         return realty;
     }
 

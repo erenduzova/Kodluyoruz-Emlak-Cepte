@@ -33,7 +33,20 @@ public class RealtyController {
     }
 
     // Get User's Active Realty
+    @GetMapping(value = "/{userId}/active")
+    public ResponseEntity<List<RealtyResponse>> getUserActiveRealty(@PathVariable Integer userId) {
+        List<RealtyResponse> activeRealty = realtyService.getUserActive(userId);
+        return new ResponseEntity<>(activeRealty,HttpStatus.FOUND);
+    }
 
-    // Get User's All Realty
+    // Get User's Passive Realty
+    @GetMapping(value = "/{userId}/passive")
+    public ResponseEntity<List<RealtyResponse>> getUserPassiveRealty(@PathVariable Integer userId) {
+        List<RealtyResponse> passiveRealty = realtyService.getUserPassive(userId);
+        return new ResponseEntity<>(passiveRealty,HttpStatus.FOUND);
+    }
+
+
+
 
 }
