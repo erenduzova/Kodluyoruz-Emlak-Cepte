@@ -39,8 +39,6 @@ public class Realty {
         this.title = title;
         this.user = user;
         this.province = province;
-        this.status = RealtyStatus.IN_REVIEW;
-        this.createDate = LocalDateTime.now();
     }
 
     public Integer getId() {
