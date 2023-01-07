@@ -27,6 +27,8 @@ public class User {
     private UserType type;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Realty> realtyList;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Search> searchList;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDate;
