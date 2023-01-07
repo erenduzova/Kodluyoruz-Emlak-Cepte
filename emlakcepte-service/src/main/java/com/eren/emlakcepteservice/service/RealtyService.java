@@ -26,9 +26,8 @@ public class RealtyService {
 
     // Create Realty
     public RealtyResponse create(RealtyRequest realtyRequest) {
-        Realty newRealty = realtyConverter.convert(realtyRequest);
         User user = userService.getById(realtyRequest.getUserId());
-        newRealty.setUser(user);
+        Realty newRealty = realtyConverter.convert(realtyRequest, user);
         realtyRepository.save(newRealty);
         return realtyConverter.convert(newRealty);
     }
@@ -60,4 +59,11 @@ public class RealtyService {
     }
 
 
+    public List<Realty> getAllByProvince(String searchedProvince) {
+        return realtyRepository.findAllByProvince(searchedProvince);
+    }
+
+    public List<Realty> getAllByDistrict(String searchedDistrict) {
+        return realtyRepository.findAllByDistrict(searchedDistrict);
+    }
 }

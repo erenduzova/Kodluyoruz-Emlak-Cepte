@@ -1,6 +1,7 @@
 package com.eren.emlakcepteservice.converter;
 
 import com.eren.emlakcepteservice.entity.Realty;
+import com.eren.emlakcepteservice.entity.User;
 import com.eren.emlakcepteservice.entity.enums.RealtyStatus;
 import com.eren.emlakcepteservice.request.RealtyRequest;
 import com.eren.emlakcepteservice.response.RealtyResponse;
@@ -28,7 +29,7 @@ public class RealtyConverter {
         return response;
     }
 
-    public Realty convert(RealtyRequest realtyRequest){
+    public Realty convert(RealtyRequest realtyRequest, User user){
         Realty realty = new Realty();
         realty.setNo(realtyRequest.getNo());
         realty.setTitle(realtyRequest.getTitle());
@@ -36,7 +37,7 @@ public class RealtyConverter {
         realty.setDistrict(realtyRequest.getDistrict());
         realty.setStatus(RealtyStatus.IN_REVIEW);
         realty.setCreateDate(LocalDateTime.now());
-        // User set in realtyService
+        realty.setUser(user);
         return realty;
     }
 

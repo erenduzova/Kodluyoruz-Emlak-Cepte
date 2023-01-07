@@ -17,4 +17,8 @@ public interface RealtyRepository extends JpaRepository<Realty, Integer> {
 
     @Query("SELECT r FROM Realty r WHERE r.status = ?1 and r.user = ?2")
     List<Realty> findRealtyByStatusAndUser(RealtyStatus status, User user);
+
+    List<Realty> findAllByProvince(String searchedProvince);
+
+    List<Realty> findAllByDistrict(String searchedDistrict);
 }
