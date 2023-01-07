@@ -30,15 +30,19 @@ public class Realty {
     @Column(name = "province")
     private String province;
 
+    @Column(name = "district")
+    private String district;
+
     public Realty() {
 
     }
 
-    public Realty(Integer no, String title, User user, String province) {
+    public Realty(Integer no, String title, User user, String province, String district) {
         this.no = no;
         this.title = title;
         this.user = user;
         this.province = province;
+        this.district = district;
     }
 
     public Integer getId() {
@@ -97,6 +101,14 @@ public class Realty {
         this.province = province;
     }
 
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
     @Override
     public String toString() {
         return "Realty{" +
@@ -106,6 +118,7 @@ public class Realty {
                 ", createDate=" + createDate +
                 ", status=" + status +
                 ", province='" + province + '\'' +
+                ", district='" + district + '\'' +
                 '}';
     }
 }

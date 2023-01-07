@@ -13,6 +13,7 @@ public class RealtyResponse {
     private UserResponse userResponse;
     private RealtyStatus status;
     private String province;
+    private String district;
 
     public Integer getId() {
         return id;
@@ -68,5 +69,13 @@ public class RealtyResponse {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 }

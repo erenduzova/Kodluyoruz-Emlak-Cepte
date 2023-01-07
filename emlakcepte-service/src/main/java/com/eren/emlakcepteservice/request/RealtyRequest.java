@@ -6,6 +6,7 @@ public class RealtyRequest {
     private String title;
     private Integer userId;
     private String province;
+    private String district;
 
     public Integer getNo() {
         return no;
@@ -37,5 +38,13 @@ public class RealtyRequest {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 }

@@ -23,6 +23,7 @@ public class RealtyConverter {
         response.setCreateDate(realty.getCreateDate());
         response.setStatus(realty.getStatus());
         response.setProvince(realty.getProvince());
+        response.setDistrict(realty.getDistrict());
         response.setUserResponse(userConverter.convert(realty.getUser()));
         return response;
     }
@@ -32,6 +33,7 @@ public class RealtyConverter {
         realty.setNo(realtyRequest.getNo());
         realty.setTitle(realtyRequest.getTitle());
         realty.setProvince(realtyRequest.getProvince());
+        realty.setDistrict(realtyRequest.getDistrict());
         realty.setStatus(RealtyStatus.IN_REVIEW);
         realty.setCreateDate(LocalDateTime.now());
         // User set in realtyService
