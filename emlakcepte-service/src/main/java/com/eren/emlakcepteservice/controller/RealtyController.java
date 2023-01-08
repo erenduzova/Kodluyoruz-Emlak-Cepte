@@ -1,6 +1,7 @@
 package com.eren.emlakcepteservice.controller;
 
 import com.eren.emlakcepteservice.request.RealtyRequest;
+import com.eren.emlakcepteservice.response.ProvinceResponse;
 import com.eren.emlakcepteservice.response.RealtyResponse;
 import com.eren.emlakcepteservice.service.RealtyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,19 @@ public class RealtyController {
         return new ResponseEntity<>(passiveRealty,HttpStatus.FOUND);
     }
 
+    // Get Province Realty Display
+    @GetMapping(value = "/display/{province}")
+    public ResponseEntity<List<RealtyResponse>> getProvinceDisplay(@PathVariable String province) {
+        List<RealtyResponse> provinceDisplay = realtyService.getProvinceDisplay(province);
+        return new ResponseEntity<>(provinceDisplay, HttpStatus.OK);
+    }
 
+    // Get Province Response ( Counts of the Realty Types)
+    @GetMapping(value = "/{province}")
+    public ResponseEntity<ProvinceResponse> getProvinceResponse(@PathVariable String province) {
+        ProvinceResponse provinceResponse = realtyService.getProvinceResponse(province);
+        return new ResponseEntity<>(provinceResponse, HttpStatus.OK);
+    }
 
 
 }
