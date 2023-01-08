@@ -14,7 +14,6 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
     private Integer id;
     @Column(name = "name")
     private String name;
@@ -25,9 +24,9 @@ public class User {
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private UserType type;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Realty> realtyList;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Search> searchList;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -97,6 +96,14 @@ public class User {
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
+    }
+
+    public List<Search> getSearchList() {
+        return searchList;
+    }
+
+    public void setSearchList(List<Search> searchList) {
+        this.searchList = searchList;
     }
 
     @Override

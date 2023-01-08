@@ -21,8 +21,8 @@ public class Realty {
     @Column(name = "create_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDate;
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName="id")
     private User user;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

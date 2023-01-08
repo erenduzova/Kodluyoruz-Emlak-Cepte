@@ -13,8 +13,8 @@ public class Search {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName="id")
     private User user;
     @Column(name = "search_type")
     private SearchType searchType;
