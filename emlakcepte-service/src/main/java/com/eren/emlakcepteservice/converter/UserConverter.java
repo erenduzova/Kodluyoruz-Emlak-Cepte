@@ -17,6 +17,7 @@ public class UserConverter {
         response.setId(user.getId());
         response.setName(user.getName());
         response.setType(user.getType());
+        response.setPublishLimit(user.getPublishLimit());
         return response;
     }
 
@@ -27,6 +28,7 @@ public class UserConverter {
         user.setPassword(userRequest.getPassword());
         user.setType(userRequest.getType());
         user.setCreateDate(LocalDateTime.now());
+        user.setPublishLimit(0);
         return user;
     }
 

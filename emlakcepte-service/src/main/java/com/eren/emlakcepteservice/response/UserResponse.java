@@ -8,6 +8,7 @@ public class UserResponse {
     private String name;
     private String email;
     private UserType type;
+    private Integer publishLimit;
 
     public Integer getId() {
         return id;
@@ -41,6 +42,14 @@ public class UserResponse {
         this.type = type;
     }
 
+    public Integer getPublishLimit() {
+        return publishLimit;
+    }
+
+    public void setPublishLimit(Integer publishLimit) {
+        this.publishLimit = publishLimit;
+    }
+
     @Override
     public String toString() {
         return "UserResponse{" +
@@ -48,6 +57,7 @@ public class UserResponse {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", type=" + type +
+                ", publish_limit=" + publishLimit +
                 '}';
     }
 }

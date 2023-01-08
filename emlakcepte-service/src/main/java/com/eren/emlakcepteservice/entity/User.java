@@ -21,6 +21,8 @@ public class User {
     private String email;
     @Column(name = "password")
     private String password;
+    @Column(name = "publish_limit")
+    private Integer publishLimit;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private UserType type;
@@ -74,6 +76,14 @@ public class User {
         this.password = password;
     }
 
+    public Integer getPublishLimit() {
+        return publishLimit;
+    }
+
+    public void setPublishLimit(Integer publishLimit) {
+        this.publishLimit = publishLimit;
+    }
+
     public UserType getType() {
         return type;
     }
@@ -113,6 +123,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", publish_limit=" + publishLimit +
                 ", type=" + type +
                 ", createDate=" + createDate +
                 '}';
