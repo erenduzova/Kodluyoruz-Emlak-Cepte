@@ -42,8 +42,7 @@ public class RealtyService {
 
     // Get User's All Realty
     public List<RealtyResponse> getUserAll(Integer userId) {
-        User user = userService.getById(userId);
-        List<Realty> allRealty = realtyRepository.findAllByUser(user);
+        List<Realty> allRealty = userService.getAllRealty(userId);
         return realtyConverter.convert(allRealty);
     }
 

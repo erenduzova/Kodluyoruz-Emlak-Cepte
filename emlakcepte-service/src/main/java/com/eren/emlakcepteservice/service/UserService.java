@@ -1,6 +1,7 @@
 package com.eren.emlakcepteservice.service;
 
 import com.eren.emlakcepteservice.converter.UserConverter;
+import com.eren.emlakcepteservice.entity.Realty;
 import com.eren.emlakcepteservice.entity.Search;
 import com.eren.emlakcepteservice.entity.User;
 import com.eren.emlakcepteservice.repository.UserRepository;
@@ -79,4 +80,11 @@ public class UserService {
     public List<Search> getUserSearchHistory(Integer userId) {
         return getById(userId).getSearchList();
     }
+
+    // Get User's All Realty
+    public List<Realty> getAllRealty(Integer userId) {
+        User user = getById(userId);
+        return user.getRealtyList();
+    }
+
 }
