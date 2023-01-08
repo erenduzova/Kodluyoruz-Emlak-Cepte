@@ -1,6 +1,8 @@
 package com.eren.emlakcepteservice.entity;
 
+import com.eren.emlakcepteservice.entity.enums.RealtyKind;
 import com.eren.emlakcepteservice.entity.enums.RealtyStatus;
+import com.eren.emlakcepteservice.entity.enums.RealtyType;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
@@ -27,6 +29,12 @@ public class Realty {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private RealtyStatus status;
+    @Column(name = "kind")
+    @Enumerated(EnumType.STRING)
+    private RealtyKind kind;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private RealtyType type;
     @Column(name = "province")
     private String province;
 
@@ -93,6 +101,22 @@ public class Realty {
         this.status = status;
     }
 
+    public RealtyKind getKind() {
+        return kind;
+    }
+
+    public void setKind(RealtyKind kind) {
+        this.kind = kind;
+    }
+
+    public RealtyType getType() {
+        return type;
+    }
+
+    public void setType(RealtyType type) {
+        this.type = type;
+    }
+
     public String getProvince() {
         return province;
     }
@@ -117,6 +141,8 @@ public class Realty {
                 ", title='" + title + '\'' +
                 ", createDate=" + createDate +
                 ", status=" + status +
+                ", kind=" + kind +
+                ", type=" + type +
                 ", province='" + province + '\'' +
                 ", district='" + district + '\'' +
                 '}';
