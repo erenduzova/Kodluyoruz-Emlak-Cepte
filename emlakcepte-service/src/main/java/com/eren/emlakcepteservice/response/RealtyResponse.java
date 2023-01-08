@@ -1,6 +1,8 @@
 package com.eren.emlakcepteservice.response;
 
+import com.eren.emlakcepteservice.entity.enums.RealtyKind;
 import com.eren.emlakcepteservice.entity.enums.RealtyStatus;
+import com.eren.emlakcepteservice.entity.enums.RealtyType;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +14,8 @@ public class RealtyResponse {
     private LocalDateTime createDate;
     private UserResponse userResponse;
     private RealtyStatus status;
+    private RealtyKind kind;
+    private RealtyType type;
     private String province;
     private String district;
 
@@ -61,6 +65,22 @@ public class RealtyResponse {
 
     public void setStatus(RealtyStatus status) {
         this.status = status;
+    }
+
+    public RealtyKind getKind() {
+        return kind;
+    }
+
+    public void setKind(RealtyKind kind) {
+        this.kind = kind;
+    }
+
+    public RealtyType getType() {
+        return type;
+    }
+
+    public void setType(RealtyType type) {
+        this.type = type;
     }
 
     public String getProvince() {
