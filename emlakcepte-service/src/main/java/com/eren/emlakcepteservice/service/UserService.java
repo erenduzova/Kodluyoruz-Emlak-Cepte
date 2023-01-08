@@ -1,6 +1,7 @@
 package com.eren.emlakcepteservice.service;
 
 import com.eren.emlakcepteservice.converter.UserConverter;
+import com.eren.emlakcepteservice.entity.Search;
 import com.eren.emlakcepteservice.entity.User;
 import com.eren.emlakcepteservice.repository.UserRepository;
 import com.eren.emlakcepteservice.request.UserRequest;
@@ -74,6 +75,8 @@ public class UserService {
         return user;
     }
 
-
-
+    // Get User's Search History
+    public List<Search> getUserSearchHistory(Integer userId) {
+        return getById(userId).getSearchList();
+    }
 }

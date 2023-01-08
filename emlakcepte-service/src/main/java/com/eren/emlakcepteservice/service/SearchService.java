@@ -60,4 +60,9 @@ public class SearchService {
     public List<SearchResponse> getAll() {
         return searchConverter.convert(searchRepository.findAll());
     }
+
+    // Get User's Search History
+    public List<SearchResponse> getUserSearchHistory(Integer userId) {
+        return searchConverter.convert(userService.getUserSearchHistory(userId));
+    }
 }

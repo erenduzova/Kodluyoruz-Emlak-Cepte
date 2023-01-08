@@ -32,4 +32,11 @@ public class SearchController {
         return new ResponseEntity<>(searchList, HttpStatus.FOUND);
     }
 
+    // Get User's Search History
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity<List<SearchResponse>> getUserSearchHistory(@PathVariable Integer userId) {
+        List<SearchResponse> searchList = searchService.getUserSearchHistory(userId);
+        return new ResponseEntity<>(searchList, HttpStatus.FOUND);
+    }
+
 }
