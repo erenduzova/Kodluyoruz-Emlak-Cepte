@@ -8,10 +8,13 @@ import com.eren.emlakcepteservice.entity.enums.RealtyStatus;
 import com.eren.emlakcepteservice.entity.enums.RealtyType;
 import com.eren.emlakcepteservice.repository.RealtyRepository;
 import com.eren.emlakcepteservice.request.RealtyRequest;
+import com.eren.emlakcepteservice.request.RealtyUpdateRequest;
 import com.eren.emlakcepteservice.response.ProvinceResponse;
 import com.eren.emlakcepteservice.response.RealtyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -38,6 +41,13 @@ public class RealtyService {
     // Get All Realty
     public List<RealtyResponse> getAllRealtyResponse() {
         return realtyConverter.convert(realtyRepository.findAll());
+    }
+
+    // Get Realty By Id
+    public Realty getById(Integer realtyId) {
+        return realtyRepository.findById(realtyId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Realty not found with this id: " + realtyId));
+
     }
 
     // Get User's All Realty
@@ -113,5 +123,24 @@ public class RealtyService {
         provinceResponse.setRentLandCount(rentLandCount);
 
         return provinceResponse;
+    }
+
+    public RealtyResponse update(Integer realtyId, RealtyUpdateRequest realtyUpdateRequest) {
+        Realty realty = getById(realtyId);
+        // Update
+        if (realtyUpdateRequest.getTitle() != null && realtyUpdateRequest.getTitle().length() > 0) {
+            realty.setTitle(realtyUpdateRequest.getTitle());
+        }
+        if (realtyUpdateRequest.getType() != null) {
+            realty.setType(realtyUpdateRequest.getType());
+        }
+        if (realtyUpdateRequest.getDistrict() != null && realtyUpdateRequest.getDistrict().length() > 0) {
+            realty.setDistrict(realtyUpdateRequest.getDistrict());
+        }
+        if (realtyUpdateRequest.getProvince() != null && realtyUpdateRequest.getProvince().length() > 0) {
+            realty.setProvince(realtyUpdateRequest.getProvince());
+        }
+        realtyRepository.save(realty);
+        return realtyConverter.convert(realty);
     }
 }

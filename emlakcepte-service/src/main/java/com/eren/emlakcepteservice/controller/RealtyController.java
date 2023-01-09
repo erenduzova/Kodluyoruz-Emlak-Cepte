@@ -1,6 +1,7 @@
 package com.eren.emlakcepteservice.controller;
 
 import com.eren.emlakcepteservice.request.RealtyRequest;
+import com.eren.emlakcepteservice.request.RealtyUpdateRequest;
 import com.eren.emlakcepteservice.response.ProvinceResponse;
 import com.eren.emlakcepteservice.response.RealtyResponse;
 import com.eren.emlakcepteservice.service.RealtyService;
@@ -31,6 +32,13 @@ public class RealtyController {
     public ResponseEntity<RealtyResponse> create(@RequestBody RealtyRequest realtyRequest) {
         RealtyResponse savedRealty = realtyService.create(realtyRequest);
         return new ResponseEntity<>(savedRealty, HttpStatus.CREATED);
+    }
+
+    // Update Realty
+    @PutMapping(value = "/{realtyId}")
+    public ResponseEntity<RealtyResponse> update(@PathVariable Integer realtyId, @RequestBody RealtyUpdateRequest realtyUpdateRequest) {
+        RealtyResponse updatedRealty = realtyService.update(realtyId, realtyUpdateRequest);
+        return new ResponseEntity<>(updatedRealty, HttpStatus.OK);
     }
 
     // Get User's Active Realty
