@@ -69,9 +69,15 @@ public class UserService {
 
     // Update User
     public User updateUser(User user, UserUpdateRequest userUpdateRequest) {
-        user.setName(userUpdateRequest.getName());
-        user.setEmail(userUpdateRequest.getEmail());
-        user.setPassword(userUpdateRequest.getPassword());
+        if (userUpdateRequest.getName() != null && userUpdateRequest.getName().length() > 0) {
+            user.setName(userUpdateRequest.getName());
+        }
+        if (userUpdateRequest.getEmail() != null && userUpdateRequest.getEmail().length() > 0) {
+            user.setEmail(userUpdateRequest.getEmail());
+        }
+        if (userUpdateRequest.getPassword() != null && userUpdateRequest.getPassword().length() > 0) {
+            user.setPassword(userUpdateRequest.getPassword());
+        }
         userRepository.save(user);
         return user;
     }
