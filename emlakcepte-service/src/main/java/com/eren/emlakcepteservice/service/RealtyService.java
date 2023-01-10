@@ -186,7 +186,11 @@ public class RealtyService {
         if (unUsedPublicationRight.isPresent()) {
             // Use Publication Right
             PublicationRight usePublicationRight = unUsedPublicationRight.get();
-            realty.setPublicationEnding(LocalDateTime.now().plusDays(usePublicationRight.getDays()));
+            if (haveTime(realty)) {
+                realty.setPublicationEnding(realty.getPublicationEnding().plusDays(usePublicationRight.getDays()));
+            } else {
+                realty.setPublicationEnding(LocalDateTime.now().plusDays(usePublicationRight.getDays()));
+            }
             realty.setStatus(RealtyStatus.ACTIVE);
             usePublicationRight.setUsed(true);
             publicationRepository.save(usePublicationRight);
