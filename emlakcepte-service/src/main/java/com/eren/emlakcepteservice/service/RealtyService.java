@@ -1,11 +1,13 @@
 package com.eren.emlakcepteservice.service;
 
 import com.eren.emlakcepteservice.converter.RealtyConverter;
+import com.eren.emlakcepteservice.entity.PublicationRight;
 import com.eren.emlakcepteservice.entity.Realty;
 import com.eren.emlakcepteservice.entity.User;
 import com.eren.emlakcepteservice.entity.enums.RealtyKind;
 import com.eren.emlakcepteservice.entity.enums.RealtyStatus;
 import com.eren.emlakcepteservice.entity.enums.RealtyType;
+import com.eren.emlakcepteservice.repository.PublicationRepository;
 import com.eren.emlakcepteservice.repository.RealtyRepository;
 import com.eren.emlakcepteservice.request.RealtyRequest;
 import com.eren.emlakcepteservice.request.RealtyUpdateRequest;
@@ -16,13 +18,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RealtyService {
 
     @Autowired
     private RealtyRepository realtyRepository;
+
+    @Autowired
+    private PublicationRepository publicationRepository;
 
     @Autowired
     private RealtyConverter realtyConverter;
@@ -143,4 +150,48 @@ public class RealtyService {
         realtyRepository.save(realty);
         return realtyConverter.convert(realty);
     }
+
+    // Publish Realty
+    public RealtyResponse publish(Integer realtyId) {
+        Realty realty = getById(realtyId);
+        activate(realty);
+        return realtyConverter.convert(realty);
+    }
+
+    // Activate Realty
+    public void activate(Realty realty) {
+
+        if (RealtyStatus.ACTIVE.equals(realty.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Realty already published");
+        }
+
+        User user = realty.getUser();
+
+        if (haveTime(realty)) {
+            realty.setStatus(RealtyStatus.ACTIVE);
+        } else {
+            // Does user have unused publication right
+            Optional<PublicationRight> unUsedPublicationRight = user.getPublicationRightList().stream()
+                    .filter(publicationRight1 -> !publicationRight1.isUsed()).findFirst();
+            if (unUsedPublicationRight.isPresent()) {
+                // Use Publication Right
+                PublicationRight usePublicationRight = unUsedPublicationRight.get();
+                realty.setPublicationEnding(LocalDateTime.now().plusDays(usePublicationRight.getDays()));
+                realty.setStatus(RealtyStatus.ACTIVE);
+                usePublicationRight.setUsed(true);
+                publicationRepository.save(usePublicationRight);
+            } else {
+                // User has no publication rights
+                throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Buy Publication Right to publish");
+            }
+        }
+
+        realtyRepository.save(realty);
+    }
+
+    // Does Realty have time for publication
+    public boolean haveTime(Realty realty) {
+        return realty.getPublicationEnding().isAfter(LocalDateTime.now());
+    }
+
 }
