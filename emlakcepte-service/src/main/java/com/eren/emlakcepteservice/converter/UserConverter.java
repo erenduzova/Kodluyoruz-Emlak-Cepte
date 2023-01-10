@@ -1,5 +1,6 @@
 package com.eren.emlakcepteservice.converter;
 
+import com.eren.emlakcepteservice.entity.PublicationRight;
 import com.eren.emlakcepteservice.entity.User;
 import com.eren.emlakcepteservice.request.UserRequest;
 import com.eren.emlakcepteservice.response.UserResponse;
@@ -17,7 +18,10 @@ public class UserConverter {
         response.setId(user.getId());
         response.setName(user.getName());
         response.setType(user.getType());
-        response.setPublishLimit(user.getPublishLimit());
+        response.setUsedPublicationRights((int) user.getPublicationRightList().stream()
+                .filter(PublicationRight::isUsed).count());
+        response.setUnusedPublicationRights((int) user.getPublicationRightList().stream()
+                .filter(publicationRight -> !publicationRight.isUsed()).count());
         return response;
     }
 
@@ -28,7 +32,7 @@ public class UserConverter {
         user.setPassword(userRequest.getPassword());
         user.setType(userRequest.getType());
         user.setCreateDate(LocalDateTime.now());
-        user.setPublishLimit(0);
+        user.setPublicationRightList(List.of());
         return user;
     }
 

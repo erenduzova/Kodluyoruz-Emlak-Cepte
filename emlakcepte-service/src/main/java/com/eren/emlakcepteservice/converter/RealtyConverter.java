@@ -22,6 +22,7 @@ public class RealtyConverter {
         response.setNo(realty.getNo());
         response.setTitle(realty.getTitle());
         response.setCreateDate(realty.getCreateDate());
+        response.setPublicationEnding(realty.getPublicationEnding());
         response.setStatus(realty.getStatus());
         response.setKind(realty.getKind());
         response.setType(realty.getType());
@@ -41,6 +42,7 @@ public class RealtyConverter {
         realty.setKind(realtyRequest.getKind());
         realty.setType(realtyRequest.getType());
         realty.setCreateDate(LocalDateTime.now());
+        realty.setPublicationEnding(LocalDateTime.now());
         realty.setUser(user);
         return realty;
     }
