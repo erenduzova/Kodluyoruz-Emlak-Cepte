@@ -8,7 +8,8 @@ public class UserResponse {
     private String name;
     private String email;
     private UserType type;
-    private Integer publishLimit;
+    private Integer usedPublicationRights;
+    private Integer unusedPublicationRights;
 
     public Integer getId() {
         return id;
@@ -42,12 +43,20 @@ public class UserResponse {
         this.type = type;
     }
 
-    public Integer getPublishLimit() {
-        return publishLimit;
+    public Integer getUnusedPublicationRights() {
+        return unusedPublicationRights;
     }
 
-    public void setPublishLimit(Integer publishLimit) {
-        this.publishLimit = publishLimit;
+    public void setUnusedPublicationRights(Integer unusedPublicationRights) {
+        this.unusedPublicationRights = unusedPublicationRights;
+    }
+
+    public Integer getUsedPublicationRights() {
+        return usedPublicationRights;
+    }
+
+    public void setUsedPublicationRights(Integer usedPublicationRights) {
+        this.usedPublicationRights = usedPublicationRights;
     }
 
     @Override
@@ -57,7 +66,8 @@ public class UserResponse {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", type=" + type +
-                ", publish_limit=" + publishLimit +
+                ", usedPublicationRights=" + usedPublicationRights +
+                ", unusedPublicationRights=" + unusedPublicationRights +
                 '}';
     }
 }

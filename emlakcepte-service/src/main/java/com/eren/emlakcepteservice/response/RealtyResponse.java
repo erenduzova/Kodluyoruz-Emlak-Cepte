@@ -12,6 +12,7 @@ public class RealtyResponse {
     private Integer no;
     private String title;
     private LocalDateTime createDate;
+    private LocalDateTime publicationEnding;
     private UserResponse userResponse;
     private RealtyStatus status;
     private RealtyKind kind;
@@ -49,6 +50,14 @@ public class RealtyResponse {
 
     public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
+    }
+
+    public LocalDateTime getPublicationEnding() {
+        return publicationEnding;
+    }
+
+    public void setPublicationEnding(LocalDateTime publicationEnding) {
+        this.publicationEnding = publicationEnding;
     }
 
     public UserResponse getUserResponse() {
