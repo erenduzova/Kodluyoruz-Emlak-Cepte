@@ -1,6 +1,6 @@
 package com.eren.emlakcepteservice.controller;
 
-import com.eren.emlakcepteservice.entity.User;
+import com.eren.emlakcepteservice.request.PublicationRightRequest;
 import com.eren.emlakcepteservice.request.UserRequest;
 import com.eren.emlakcepteservice.request.UserUpdateRequest;
 import com.eren.emlakcepteservice.response.UserResponse;
@@ -54,6 +54,11 @@ public class UserController {
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
-
+    // Buy Publication Rights
+    @PutMapping(value = "/publication")
+    public ResponseEntity<UserResponse> buyPublication(@RequestBody PublicationRightRequest publicationRightRequest) {
+        UserResponse userResponse = userService.buyPublication(publicationRightRequest);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
 
 }

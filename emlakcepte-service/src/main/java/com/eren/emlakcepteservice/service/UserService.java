@@ -1,10 +1,14 @@
 package com.eren.emlakcepteservice.service;
 
+import com.eren.emlakcepteservice.converter.PublicationRightConverter;
 import com.eren.emlakcepteservice.converter.UserConverter;
+import com.eren.emlakcepteservice.entity.PublicationRight;
 import com.eren.emlakcepteservice.entity.Realty;
 import com.eren.emlakcepteservice.entity.Search;
 import com.eren.emlakcepteservice.entity.User;
+import com.eren.emlakcepteservice.repository.PublicationRepository;
 import com.eren.emlakcepteservice.repository.UserRepository;
+import com.eren.emlakcepteservice.request.PublicationRightRequest;
 import com.eren.emlakcepteservice.request.UserRequest;
 import com.eren.emlakcepteservice.request.UserUpdateRequest;
 import com.eren.emlakcepteservice.response.UserResponse;
@@ -22,7 +26,13 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private PublicationRepository publicationRepository;
+
+    @Autowired
     private UserConverter userConverter;
+
+    @Autowired
+    private PublicationRightConverter publicationRightConverter;
 
 
     // Create User
@@ -93,4 +103,17 @@ public class UserService {
         return user.getRealtyList();
     }
 
+    // Buy Publication Rights
+    public UserResponse buyPublication(PublicationRightRequest publicationRightRequest) {
+        User user = getById(publicationRightRequest.getUserId());
+        // Payment will be added
+        while (publicationRightRequest.getQuantity() > 0) {
+            PublicationRight newPublicationRight = publicationRightConverter.convert(publicationRightRequest, user);
+            publicationRepository.save(newPublicationRight);
+            user.getPublicationRightList().add(newPublicationRight);
+            publicationRightRequest.setQuantity(publicationRightRequest.getQuantity() - 1);
+        }
+        userRepository.save(user);
+        return userConverter.convert(user);
+    }
 }
