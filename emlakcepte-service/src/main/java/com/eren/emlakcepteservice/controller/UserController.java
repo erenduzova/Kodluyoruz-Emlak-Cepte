@@ -3,6 +3,7 @@ package com.eren.emlakcepteservice.controller;
 import com.eren.emlakcepteservice.request.PublicationRightRequest;
 import com.eren.emlakcepteservice.request.UserRequest;
 import com.eren.emlakcepteservice.request.UserUpdateRequest;
+import com.eren.emlakcepteservice.response.PublicationRightResponse;
 import com.eren.emlakcepteservice.response.UserResponse;
 import com.eren.emlakcepteservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,13 @@ public class UserController {
     public ResponseEntity<UserResponse> buyPublication(@RequestBody PublicationRightRequest publicationRightRequest) {
         UserResponse userResponse = userService.buyPublication(publicationRightRequest);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+
+    // Get User's Publication Rights
+    @GetMapping(value = "/{userId}/publication")
+    public ResponseEntity<List<PublicationRightResponse>> getPublicationRights(@PathVariable Integer userId) {
+        List<PublicationRightResponse> publicationRightResponseList = userService.getPublicationRights(userId);
+        return new ResponseEntity<>(publicationRightResponseList, HttpStatus.OK);
     }
 
 }

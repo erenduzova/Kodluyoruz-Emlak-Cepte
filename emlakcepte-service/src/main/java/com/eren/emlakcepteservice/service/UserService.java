@@ -11,6 +11,7 @@ import com.eren.emlakcepteservice.repository.UserRepository;
 import com.eren.emlakcepteservice.request.PublicationRightRequest;
 import com.eren.emlakcepteservice.request.UserRequest;
 import com.eren.emlakcepteservice.request.UserUpdateRequest;
+import com.eren.emlakcepteservice.response.PublicationRightResponse;
 import com.eren.emlakcepteservice.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -115,5 +116,12 @@ public class UserService {
         }
         userRepository.save(user);
         return userConverter.convert(user);
+    }
+
+    // Get User's Publication Rights
+    public List<PublicationRightResponse> getPublicationRights(Integer userId) {
+        User user = getById(userId);
+        List<PublicationRight> publicationRightList = user.getPublicationRightList();
+        return publicationRightConverter.convert(publicationRightList);
     }
 }
