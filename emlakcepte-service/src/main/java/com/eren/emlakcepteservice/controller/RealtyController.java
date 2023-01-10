@@ -69,5 +69,11 @@ public class RealtyController {
         return new ResponseEntity<>(provinceResponse, HttpStatus.OK);
     }
 
+    // Publish Realty
+    @PutMapping(value = "/{realtyId}/publish")
+    public ResponseEntity<RealtyResponse> publish(@PathVariable Integer realtyId) {
+        RealtyResponse realtyResponse = realtyService.publish(realtyId);
+        return new ResponseEntity<>(realtyResponse, HttpStatus.OK);
+    }
 
 }
