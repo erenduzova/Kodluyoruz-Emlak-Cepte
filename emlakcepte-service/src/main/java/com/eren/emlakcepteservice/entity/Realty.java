@@ -3,8 +3,6 @@ package com.eren.emlakcepteservice.entity;
 import com.eren.emlakcepteservice.entity.enums.RealtyKind;
 import com.eren.emlakcepteservice.entity.enums.RealtyStatus;
 import com.eren.emlakcepteservice.entity.enums.RealtyType;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -21,10 +19,8 @@ public class Realty {
     @Column(name = "title", nullable = false, length = 200)
     private String title;
     @Column(name = "create_date")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDate;
     @Column(name = "publication_ending")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime publicationEnding;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName="id")

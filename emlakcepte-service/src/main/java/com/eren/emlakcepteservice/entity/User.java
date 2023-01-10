@@ -1,8 +1,6 @@
 package com.eren.emlakcepteservice.entity;
 
 import com.eren.emlakcepteservice.entity.enums.UserType;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -30,8 +28,7 @@ public class User {
     private List<Realty> realtyList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Search> searchList;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @Column(name = "create_date")
     private LocalDateTime createDate;
 
     public User() {

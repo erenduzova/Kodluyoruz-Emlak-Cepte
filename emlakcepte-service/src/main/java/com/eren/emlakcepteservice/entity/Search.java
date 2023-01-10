@@ -1,8 +1,6 @@
 package com.eren.emlakcepteservice.entity;
 
 import com.eren.emlakcepteservice.entity.enums.SearchType;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -21,8 +19,7 @@ public class Search {
     private SearchType searchType;
     @Column(name = "search_word")
     private String searchWord;
-
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @Column(name = "search_date")
     private LocalDateTime searchDate;
 
     public Search() {
