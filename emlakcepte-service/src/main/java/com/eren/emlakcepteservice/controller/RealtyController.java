@@ -76,4 +76,16 @@ public class RealtyController {
         return new ResponseEntity<>(realtyResponse, HttpStatus.OK);
     }
 
+    // Extend Realty Publication
+    @PutMapping(value = "/{realtyId}/publish/extend")
+    public ResponseEntity<RealtyResponse> extend(@PathVariable Integer realtyId) {
+        RealtyResponse realtyResponse = realtyService.extend(realtyId);
+        return new ResponseEntity<>(realtyResponse, HttpStatus.OK);
+    }
+    // Retract Realty Publication ( RealtyStatus.PASSIVE )
+    @PutMapping(value = "/{realtyId}/retract")
+    public ResponseEntity<RealtyResponse> retract(@PathVariable Integer realtyId) {
+        RealtyResponse realtyResponse = realtyService.retract(realtyId);
+        return new ResponseEntity<>(realtyResponse, HttpStatus.OK);
+    }
 }

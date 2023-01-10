@@ -160,33 +160,16 @@ public class RealtyService {
 
     // Activate Realty
     public void activate(Realty realty) {
-
         if (RealtyStatus.ACTIVE.equals(realty.getStatus())) {
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Realty already published");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Realty already published");
         }
-
-        User user = realty.getUser();
-
         if (haveTime(realty)) {
             realty.setStatus(RealtyStatus.ACTIVE);
+            realtyRepository.save(realty);
         } else {
-            // Does user have unused publication right
-            Optional<PublicationRight> unUsedPublicationRight = user.getPublicationRightList().stream()
-                    .filter(publicationRight1 -> !publicationRight1.isUsed()).findFirst();
-            if (unUsedPublicationRight.isPresent()) {
-                // Use Publication Right
-                PublicationRight usePublicationRight = unUsedPublicationRight.get();
-                realty.setPublicationEnding(LocalDateTime.now().plusDays(usePublicationRight.getDays()));
-                realty.setStatus(RealtyStatus.ACTIVE);
-                usePublicationRight.setUsed(true);
-                publicationRepository.save(usePublicationRight);
-            } else {
-                // User has no publication rights
-                throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Buy Publication Right to publish");
-            }
+            // Look for unused publication right and use if exist
+            usePublicationRight(realty);
         }
-
-        realtyRepository.save(realty);
     }
 
     // Does Realty have time for publication
@@ -194,4 +177,44 @@ public class RealtyService {
         return realty.getPublicationEnding().isAfter(LocalDateTime.now());
     }
 
+    // Use Publication Right
+    public void usePublicationRight(Realty realty) {
+        User user = realty.getUser();
+        // Does user have unused publication right
+        Optional<PublicationRight> unUsedPublicationRight = user.getPublicationRightList().stream()
+                .filter(publicationRight1 -> !publicationRight1.isUsed()).findFirst();
+        if (unUsedPublicationRight.isPresent()) {
+            // Use Publication Right
+            PublicationRight usePublicationRight = unUsedPublicationRight.get();
+            realty.setPublicationEnding(LocalDateTime.now().plusDays(usePublicationRight.getDays()));
+            realty.setStatus(RealtyStatus.ACTIVE);
+            usePublicationRight.setUsed(true);
+            publicationRepository.save(usePublicationRight);
+            realtyRepository.save(realty);
+        } else {
+            // User has no publication rights
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Buy Publication Right to publish");
+        }
+
+    }
+
+    // Extend Realty Publication
+    public RealtyResponse extend(Integer realtyId) {
+        Realty realty = getById(realtyId);
+        if (RealtyStatus.ACTIVE.equals(realty.getStatus())) {
+            usePublicationRight(realty);
+        }
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Can't extend publication of non published realty.");
+    }
+
+    // Retract Realty Publication ( Set RealtyStatus.PASSIVE )
+    public RealtyResponse retract(Integer realtyId) {
+        Realty realty = getById(realtyId);
+        if (RealtyStatus.PASSIVE.equals(realty.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Realty is already in Passive status.");
+        }
+        realty.setStatus(RealtyStatus.PASSIVE);
+        realtyRepository.save(realty);
+        return realtyConverter.convert(realty);
+    }
 }
