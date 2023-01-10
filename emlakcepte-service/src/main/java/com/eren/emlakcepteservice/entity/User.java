@@ -21,8 +21,8 @@ public class User {
     private String email;
     @Column(name = "password")
     private String password;
-    @Column(name = "publish_limit")
-    private Integer publishLimit;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PublicationRight> publicationRightList;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private UserType type;
@@ -76,12 +76,12 @@ public class User {
         this.password = password;
     }
 
-    public Integer getPublishLimit() {
-        return publishLimit;
+    public List<PublicationRight> getPublicationRightList() {
+        return publicationRightList;
     }
 
-    public void setPublishLimit(Integer publishLimit) {
-        this.publishLimit = publishLimit;
+    public void setPublicationRightList(List<PublicationRight> publicationRightList) {
+        this.publicationRightList = publicationRightList;
     }
 
     public UserType getType() {
@@ -123,7 +123,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", publish_limit=" + publishLimit +
+                ", publicationRightList=" + publicationRightList +
                 ", type=" + type +
                 ", createDate=" + createDate +
                 '}';

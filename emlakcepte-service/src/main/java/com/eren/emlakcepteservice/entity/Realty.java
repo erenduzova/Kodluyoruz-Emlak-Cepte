@@ -23,6 +23,9 @@ public class Realty {
     @Column(name = "create_date")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createDate;
+    @Column(name = "publication_ending")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime publicationEnding;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName="id")
     private User user;
@@ -85,6 +88,14 @@ public class Realty {
         this.createDate = createDate;
     }
 
+    public LocalDateTime getPublicationEnding() {
+        return publicationEnding;
+    }
+
+    public void setPublicationEnding(LocalDateTime publicationEnding) {
+        this.publicationEnding = publicationEnding;
+    }
+
     public User getUser() {
         return user;
     }
@@ -140,6 +151,7 @@ public class Realty {
                 ", no=" + no +
                 ", title='" + title + '\'' +
                 ", createDate=" + createDate +
+                ", publicationEnding=" + publicationEnding +
                 ", status=" + status +
                 ", kind=" + kind +
                 ", type=" + type +
