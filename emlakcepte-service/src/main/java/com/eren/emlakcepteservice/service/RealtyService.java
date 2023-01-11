@@ -1,5 +1,7 @@
 package com.eren.emlakcepteservice.service;
 
+import com.eren.emlakcepteservice.client.BannerServiceClient;
+import com.eren.emlakcepteservice.client.model.Banner;
 import com.eren.emlakcepteservice.converter.RealtyConverter;
 import com.eren.emlakcepteservice.entity.PublicationRight;
 import com.eren.emlakcepteservice.entity.Realty;
@@ -37,6 +39,9 @@ public class RealtyService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BannerServiceClient bannerServiceClient;
+
     // Check Publication Ending
     public void checkPublicationEnding(Realty realty) {
         if (!(haveTime(realty))) {
@@ -45,10 +50,25 @@ public class RealtyService {
         }
     }
 
+    // Create Banner
+    public Banner bannerCreate(Realty realty) {
+        Banner newBanner = new Banner();
+        newBanner.setRealtyNo(realty.getNo());
+        newBanner.setTitle(realty.getTitle());
+        newBanner.setProvince(realty.getProvince());
+        newBanner.setDistrict(realty.getDistrict());
+        newBanner.setQuantity(1);
+        newBanner.setEmail(realty.getUser().getEmail());
+        return newBanner;
+    }
+
     // Create Realty
     public RealtyResponse create(RealtyRequest realtyRequest) {
         User user = userService.getById(realtyRequest.getUserId());
         Realty newRealty = realtyConverter.convert(realtyRequest, user);
+        // Create 1 Free Banner
+        Banner freeBanner = bannerServiceClient.create(bannerCreate(newRealty));
+
         realtyRepository.save(newRealty);
         return realtyConverter.convert(newRealty);
     }
