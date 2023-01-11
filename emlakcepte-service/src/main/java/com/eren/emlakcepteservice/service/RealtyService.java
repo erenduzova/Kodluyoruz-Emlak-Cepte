@@ -37,6 +37,14 @@ public class RealtyService {
     @Autowired
     private UserService userService;
 
+    // Check Publication Ending
+    public void checkPublicationEnding(Realty realty) {
+        if (!(haveTime(realty))) {
+            realty.setStatus(RealtyStatus.IN_REVIEW);
+            realtyRepository.save(realty);
+        }
+    }
+
     // Create Realty
     public RealtyResponse create(RealtyRequest realtyRequest) {
         User user = userService.getById(realtyRequest.getUserId());
@@ -47,19 +55,25 @@ public class RealtyService {
 
     // Get All Realty
     public List<RealtyResponse> getAllRealtyResponse() {
-        return realtyConverter.convert(realtyRepository.findAll());
+        List<Realty> realtyList = realtyRepository.findAll();
+        realtyList.forEach(this::checkPublicationEnding);
+        return realtyConverter.convert(realtyList);
     }
 
     // Get Realty By Id
     public Realty getById(Integer realtyId) {
-        return realtyRepository.findById(realtyId)
+        Realty realty = realtyRepository.findById(realtyId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Realty not found with this id: " + realtyId));
+        checkPublicationEnding(realty);
+        return realty;
 
     }
 
     // Get User's All Realty
     public List<RealtyResponse> getUserAll(Integer userId) {
-        List<Realty> allRealty = userService.getAllRealty(userId);
+        User user = userService.getById(userId);
+        List<Realty> allRealty = realtyRepository.findAllByUser(user);
+        allRealty.forEach(this::checkPublicationEnding);
         return realtyConverter.convert(allRealty);
     }
 
@@ -67,6 +81,7 @@ public class RealtyService {
     public List<RealtyResponse> getUserActive(Integer userId) {
         User user = userService.getById(userId);
         List<Realty> activeRealty = realtyRepository.findRealtyByStatusAndUser(RealtyStatus.ACTIVE, user);
+        activeRealty.forEach(this::checkPublicationEnding);
         return realtyConverter.convert(activeRealty);
     }
 
@@ -74,36 +89,48 @@ public class RealtyService {
     public List<RealtyResponse> getUserPassive(Integer userId) {
         User user = userService.getById(userId);
         List<Realty> passiveRealty = realtyRepository.findRealtyByStatusAndUser(RealtyStatus.PASSIVE, user);
+        passiveRealty.forEach(this::checkPublicationEnding);
         return realtyConverter.convert(passiveRealty);
     }
 
     // Get Realty By Province
     public List<Realty> getAllByProvince(String searchedProvince) {
-        return realtyRepository.findAllByProvince(searchedProvince);
+        List<Realty> realtyList = realtyRepository.findAllByProvince(searchedProvince);
+        realtyList.forEach(this::checkPublicationEnding);
+        return realtyList;
     }
     // Get Realty By District
     public List<Realty> getAllByDistrict(String searchedDistrict) {
-        return realtyRepository.findAllByDistrict(searchedDistrict);
+        List<Realty> realtyList = realtyRepository.findAllByDistrict(searchedDistrict);
+        realtyList.forEach(this::checkPublicationEnding);
+        return realtyList;
     }
 
     // Get Realty By Province And Realty Type ( SALE, RENT )
-    public List<Realty> getProvinceRealtyCountByType(String province, RealtyType type) {
-        return realtyRepository.findAllByProvinceAndRealtyType(province, type);
+    public List<Realty> getProvinceRealtyByType(String province, RealtyType type) {
+        List<Realty> realtyList = realtyRepository.findAllByProvinceAndRealtyType(province, type);
+        realtyList.forEach(this::checkPublicationEnding);
+        return realtyList;
     }
 
     // Get Realty By Province And Realty Kind ( HOUSE, LAND )
-    public List<Realty> getProvinceRealtyCountByKind(String province, RealtyKind kind) {
-        return realtyRepository.findAllByProvinceAndRealtyKind(province, kind);
+    public List<Realty> getProvinceRealtyByKind(String province, RealtyKind kind) {
+        List<Realty> realtyList = realtyRepository.findAllByProvinceAndRealtyKind(province, kind);
+        realtyList.forEach(this::checkPublicationEnding);
+        return realtyList;
     }
 
     // Get Realty By Province, Realty Kind ( HOUSE, LAND ) And Realty Type ( SALE, RENT )
-    public List<Realty> getProvinceRealtyCountByKindAndType(String province, RealtyKind kind, RealtyType type) {
-        return realtyRepository.findAllByProvinceAndRealtyKindAndType(province, kind, type);
+    public List<Realty> getProvinceRealtyByKindAndType(String province, RealtyKind kind, RealtyType type) {
+        List<Realty> realtyList = realtyRepository.findAllByProvinceAndRealtyKindAndType(province, kind, type);
+        realtyList.forEach(this::checkPublicationEnding);
+        return realtyList;
     }
 
     // Get Province Display ( 10 Realty )
     public List<RealtyResponse> getProvinceDisplay(String province) {
         List<Realty> display = realtyRepository.findAllByProvince(province).stream().limit(10).toList();
+        display.forEach(this::checkPublicationEnding);
         return realtyConverter.convert(display);
     }
 
@@ -111,12 +138,12 @@ public class RealtyService {
     // Edit Here For Clean Code
     public ProvinceResponse getProvinceResponse(String province) {
         Integer realtyCount = getAllByProvince(province).size();
-        Integer saleRealtyCount = getProvinceRealtyCountByType(province, RealtyType.SALE).size();
-        Integer saleHouseCount = getProvinceRealtyCountByKindAndType(province, RealtyKind.HOUSE, RealtyType.SALE).size();
-        Integer saleLandCount = getProvinceRealtyCountByKindAndType(province, RealtyKind.LAND, RealtyType.SALE).size();
-        Integer rentRealtyCount = getProvinceRealtyCountByType(province, RealtyType.RENT).size();
-        Integer rentHouseCount = getProvinceRealtyCountByKindAndType(province, RealtyKind.HOUSE, RealtyType.RENT).size();
-        Integer rentLandCount = getProvinceRealtyCountByKindAndType(province, RealtyKind.LAND, RealtyType.RENT).size();
+        Integer saleRealtyCount = getProvinceRealtyByType(province, RealtyType.SALE).size();
+        Integer saleHouseCount = getProvinceRealtyByKindAndType(province, RealtyKind.HOUSE, RealtyType.SALE).size();
+        Integer saleLandCount = getProvinceRealtyByKindAndType(province, RealtyKind.LAND, RealtyType.SALE).size();
+        Integer rentRealtyCount = getProvinceRealtyByType(province, RealtyType.RENT).size();
+        Integer rentHouseCount = getProvinceRealtyByKindAndType(province, RealtyKind.HOUSE, RealtyType.RENT).size();
+        Integer rentLandCount = getProvinceRealtyByKindAndType(province, RealtyKind.LAND, RealtyType.RENT).size();
 
         ProvinceResponse provinceResponse = new ProvinceResponse();
 

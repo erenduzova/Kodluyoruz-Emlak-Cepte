@@ -98,12 +98,6 @@ public class UserService {
         return getById(userId).getSearchList();
     }
 
-    // Get User's All Realty
-    public List<Realty> getAllRealty(Integer userId) {
-        User user = getById(userId);
-        return user.getRealtyList();
-    }
-
     // Buy Publication Rights
     public UserResponse buyPublication(PublicationRightRequest publicationRightRequest) {
         User user = getById(publicationRightRequest.getUserId());
