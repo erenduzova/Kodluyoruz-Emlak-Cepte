@@ -238,15 +238,15 @@ public class RealtyService {
                 .filter(publicationRight1 -> !publicationRight1.isUsed()).findFirst();
         if (unUsedPublicationRight.isPresent()) {
             // Use Publication Right
-            PublicationRight usePublicationRight = unUsedPublicationRight.get();
+            PublicationRight publicationRight = unUsedPublicationRight.get();
             if (haveTime(realty)) {
-                realty.setPublicationEnding(realty.getPublicationEnding().plusDays(usePublicationRight.getDays()));
+                realty.setPublicationEnding(realty.getPublicationEnding().plusDays(publicationRight.getDays()));
             } else {
-                realty.setPublicationEnding(LocalDateTime.now().plusDays(usePublicationRight.getDays()));
+                realty.setPublicationEnding(LocalDateTime.now().plusDays(publicationRight.getDays()));
             }
             realty.setStatus(RealtyStatus.ACTIVE);
-            usePublicationRight.setUsed(true);
-            publicationRepository.save(usePublicationRight);
+            publicationRight.setUsed(true);
+            publicationRepository.save(publicationRight);
             realtyRepository.save(realty);
         } else {
             // User has no publication rights
