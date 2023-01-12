@@ -1,9 +1,11 @@
 package com.eren.emlakcepteservice.service;
 
+import com.eren.emlakcepteservice.client.PaymentServiceClient;
+import com.eren.emlakcepteservice.client.model.Payment;
+import com.eren.emlakcepteservice.client.model.enums.PaymentStatus;
 import com.eren.emlakcepteservice.converter.PublicationRightConverter;
 import com.eren.emlakcepteservice.converter.UserConverter;
 import com.eren.emlakcepteservice.entity.PublicationRight;
-import com.eren.emlakcepteservice.entity.Realty;
 import com.eren.emlakcepteservice.entity.Search;
 import com.eren.emlakcepteservice.entity.User;
 import com.eren.emlakcepteservice.repository.PublicationRepository;
@@ -34,6 +36,9 @@ public class UserService {
 
     @Autowired
     private PublicationRightConverter publicationRightConverter;
+
+    @Autowired
+    private PaymentServiceClient paymentServiceClient;
 
 
     // Create User
@@ -101,7 +106,11 @@ public class UserService {
     // Buy Publication Rights
     public UserResponse buyPublication(PublicationRightRequest publicationRightRequest) {
         User user = getById(publicationRightRequest.getUserId());
-        // Payment will be added
+        // Payment
+        Payment payment = paymentServiceClient.buyPublicationRights(new Payment(publicationRightRequest.getUserId(), PaymentStatus.UNSUCCESSFUL));
+        if (PaymentStatus.UNSUCCESSFUL.equals(payment.getPaymentStatus())){
+            throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Unsuccessful payment");
+        }
         while (publicationRightRequest.getQuantity() > 0) {
             PublicationRight newPublicationRight = publicationRightConverter.convert(publicationRightRequest, user);
             publicationRepository.save(newPublicationRight);
