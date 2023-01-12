@@ -66,9 +66,6 @@ public class RealtyService {
     public RealtyResponse create(RealtyRequest realtyRequest) {
         User user = userService.getById(realtyRequest.getUserId());
         Realty newRealty = realtyConverter.convert(realtyRequest, user);
-        // Create 1 Free Banner
-        Banner freeBanner = bannerServiceClient.create(bannerCreate(newRealty));
-
         realtyRepository.save(newRealty);
         return realtyConverter.convert(newRealty);
     }
@@ -216,6 +213,8 @@ public class RealtyService {
         } else {
             // Look for unused publication right and use if exist
             usePublicationRight(realty);
+            // Create 1 free banner for publish
+            Banner freeBanner = bannerServiceClient.create(bannerCreate(realty));
         }
     }
 
