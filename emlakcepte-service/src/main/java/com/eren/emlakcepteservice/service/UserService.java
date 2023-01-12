@@ -15,7 +15,11 @@ import com.eren.emlakcepteservice.request.UserRequest;
 import com.eren.emlakcepteservice.request.UserUpdateRequest;
 import com.eren.emlakcepteservice.response.PublicationRightResponse;
 import com.eren.emlakcepteservice.response.UserResponse;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,6 +45,17 @@ public class UserService {
 
     @Autowired
     private PaymentServiceClient paymentServiceClient;
+
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+    @Autowired
+    private DirectExchange exchange;
+
+    // Payment Queue Parameters Read From application.properties
+    @Value("${rabbitmq.routingKey}")
+    private String routingKey;
+    @Value("${rabbitmq.queue}")
+    private String queueName;
 
     private final Logger logger = Logger.getLogger(UserService.class.getName());
 
@@ -107,7 +122,7 @@ public class UserService {
     }
 
     // Buy Publication Rights
-    public UserResponse buyPublication(PublicationRightRequest publicationRightRequest) {
+    public void buyPublication(PublicationRightRequest publicationRightRequest) {
         User user = getById(publicationRightRequest.getUserId());
         // Payment
         Payment payment = paymentServiceClient.buyPublicationRights(new Payment(publicationRightRequest.getUserId(), PaymentStatus.UNSUCCESSFUL));
@@ -115,14 +130,19 @@ public class UserService {
             logger.log(Level.WARNING, "[buyPublication] - payment unsuccessful: {0}", payment.getPaymentStatus());
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Unsuccessful payment");
         }
+        rabbitTemplate.convertAndSend(exchange.getName(), routingKey, publicationRightRequest);
+    }
+
+    // Asynchronous publicationRight Buy Process
+    @RabbitListener(queues = "${rabbitmq.queue}")
+    public void giveBoughtPublicationRights(PublicationRightRequest publicationRightRequest) {
+        User user = getById(publicationRightRequest.getUserId());
         while (publicationRightRequest.getQuantity() > 0) {
             PublicationRight newPublicationRight = publicationRightConverter.convert(publicationRightRequest, user);
             publicationRepository.save(newPublicationRight);
-            user.getPublicationRightList().add(newPublicationRight);
             publicationRightRequest.setQuantity(publicationRightRequest.getQuantity() - 1);
         }
         userRepository.save(user);
-        return userConverter.convert(user);
     }
 
     // Get User's Publication Rights

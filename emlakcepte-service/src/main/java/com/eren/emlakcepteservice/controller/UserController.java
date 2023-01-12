@@ -57,9 +57,9 @@ public class UserController {
 
     // Buy Publication Rights
     @PutMapping(value = "/publication")
-    public ResponseEntity<UserResponse> buyPublication(@RequestBody PublicationRightRequest publicationRightRequest) {
-        UserResponse userResponse = userService.buyPublication(publicationRightRequest);
-        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    public ResponseEntity<String> buyPublication(@RequestBody PublicationRightRequest publicationRightRequest) {
+        userService.buyPublication(publicationRightRequest);
+        return new ResponseEntity<>("Buy publication rights process begins", HttpStatus.OK);
     }
 
     // Get User's Publication Rights
