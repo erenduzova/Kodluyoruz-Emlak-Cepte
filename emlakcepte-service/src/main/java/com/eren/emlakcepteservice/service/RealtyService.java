@@ -23,6 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class RealtyService {
@@ -41,6 +43,8 @@ public class RealtyService {
 
     @Autowired
     private BannerServiceClient bannerServiceClient;
+
+    private final Logger logger = Logger.getLogger(RealtyService.class.getName());
 
     // Check Publication Ending
     public void checkPublicationEnding(Realty realty) {
@@ -66,6 +70,7 @@ public class RealtyService {
     public RealtyResponse create(RealtyRequest realtyRequest) {
         User user = userService.getById(realtyRequest.getUserId());
         Realty newRealty = realtyConverter.convert(realtyRequest, user);
+        logger.log(Level.INFO, "[create] - realty created: {0}", newRealty.getId());
         realtyRepository.save(newRealty);
         return realtyConverter.convert(newRealty);
     }
@@ -205,6 +210,7 @@ public class RealtyService {
     // Activate Realty
     public void activate(Realty realty) {
         if (RealtyStatus.ACTIVE.equals(realty.getStatus())) {
+            logger.log(Level.WARNING, "[activate] - realty already published: {0}", realty.getId());
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Realty already published");
         }
         if (haveTime(realty)) {
@@ -216,6 +222,7 @@ public class RealtyService {
             // Create 1 free banner for publish
             Banner freeBanner = bannerServiceClient.create(bannerCreate(realty));
         }
+        logger.log(Level.INFO, "[activate] - realty published: {0}", realty.getId());
     }
 
     // Does Realty have time for publication
@@ -254,6 +261,7 @@ public class RealtyService {
         if (RealtyStatus.ACTIVE.equals(realty.getStatus())) {
             usePublicationRight(realty);
         }
+            logger.log(Level.WARNING, "[extend] - realty is not published: {0}", realty.getId());
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Can't extend publication of non published realty.");
     }
 
@@ -261,6 +269,7 @@ public class RealtyService {
     public RealtyResponse retract(Integer realtyId) {
         Realty realty = getById(realtyId);
         if (RealtyStatus.PASSIVE.equals(realty.getStatus())) {
+            logger.log(Level.WARNING, "[retract] - realty is already passive: {0}", realty.getId());
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Realty is already in Passive status.");
         }
         realty.setStatus(RealtyStatus.PASSIVE);

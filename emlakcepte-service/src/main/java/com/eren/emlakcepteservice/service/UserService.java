@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
@@ -40,11 +42,12 @@ public class UserService {
     @Autowired
     private PaymentServiceClient paymentServiceClient;
 
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
 
     // Create User
     public UserResponse createUser(UserRequest userRequest) {
-
         User savedUser = userRepository.save(userConverter.convert(userRequest));
+        logger.log(Level.INFO, "[createUser] - user created: {0}", savedUser.getId());
         return userConverter.convert(savedUser);
     }
 
@@ -109,6 +112,7 @@ public class UserService {
         // Payment
         Payment payment = paymentServiceClient.buyPublicationRights(new Payment(publicationRightRequest.getUserId(), PaymentStatus.UNSUCCESSFUL));
         if (PaymentStatus.UNSUCCESSFUL.equals(payment.getPaymentStatus())){
+            logger.log(Level.WARNING, "[buyPublication] - payment unsuccessful: {0}", payment.getPaymentStatus());
             throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, "Unsuccessful payment");
         }
         while (publicationRightRequest.getQuantity() > 0) {
