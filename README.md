@@ -31,11 +31,10 @@ eklenerek bulunmalıdır
 - Kullancıların aldıkları ürünler ödeme işlemi başarılı olduktan sonra tanımlanmalı ve bu işlem asenkron yapılmalı
 
 ## Teknolojiler
-- Java 8
-- JUnit 5
+- Java 17
 - Spring Boot
 - Restfull
-- MySQL / Postgre / MongoDb
+- PostgreSQL
 - RabbitMQ
 - Microservice mimarisi
 
